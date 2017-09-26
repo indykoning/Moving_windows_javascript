@@ -1,0 +1,40 @@
+.MoveAble{
+        /*z-index: 0;*/
+        background-color: white;
+        border: inset black 1px;
+        box-shadow: 4px 4px 10px 4px rgba(0,0,0,0.5);
+    }
+    .MoveAble .MoveAble-topBar{
+        box-shadow: 0px 1px 0px black;
+        /*color: white;*/
+        background-color: white;
+        height: 30px;
+        display: block;
+        position: relative;
+        width: 100%;
+    }  .moving_windows_minimize,.moving_windows_close{
+        margin: 0;
+        height: 100%;
+        font-size: 100%;
+        vertical-align: middle;
+        float: right;
+        transition: 0.1s ease-in;
+    }
+    .moving_windows_minimize{
+        padding: 0px 10px;
+    }
+    .moving_windows_close{
+        padding-top: 5px;
+        padding-bottom: -5px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .moving_windows_close:hover{
+        background-color: red;
+    }
+.moving_windows_minimize:hover{
+        background-color: lightgray;
+    }
+    .minimized{
+display: none;
+    }
