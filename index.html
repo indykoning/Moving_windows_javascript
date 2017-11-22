@@ -1,0 +1,162 @@
+<html>
+<head>
+    <title>MoveAble windows</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Indy Koning">
+    <!--required includes-->
+    <script src="js/Moving_windows.js"></script>
+    <link rel="stylesheet" href="css/Demo_Moving_windows.css">
+    <!--end required includes-->
+</head>
+<body id="holder">
+<input type="text" id="addStreamer" placeholder="enter twitch username and press enter">
+<input type="url" id="openSite" placeholder="enter url and press enter">
+<!--template-->
+
+<!--<div class="MoveAble">-->
+    <!--<div class="MoveAble-topBar">-->
+        <!--&lt;!&ndash;add stuff on the top bar, like a title&ndash;&gt;-->
+    <!--</div>-->
+    <!--<div class="MoveAble-content">-->
+        <!--&lt;!&ndash;where you actually put the content of the box&ndash;&gt;-->
+    <!--</div>-->
+<!--</div>-->
+<!--end template-->
+
+    
+    
+    <div class="MoveAble">
+    <div class="MoveAble-topBar">
+    <h4 style="display: inline">Movable Form</h4>
+        </div>
+    <div class="MoveAble-content">
+        <form>
+            <input type="button"><br>
+            <input type="checkbox"><br>
+            <input type="color"><br>
+            <input type="date"><br>
+            <input type="datetime-local"><br>
+            <input type="email"><br>
+            <input type="file"><br>
+            <input type="hidden"><br>
+            <input type="image" alt="foto"><br>
+            <input type="month"><br>
+            <input type="number"><br>
+            <input type="password"><br>
+            <input type="radio"><br>
+            <input type="range" min="0" max="100" step="1"><br>
+            <input type="reset"><br>
+            <input type="search"><br>
+            <input type="tel"><br>
+            <input type="text"><br>
+            <input type="time"><br>
+            <input type="url"><br>
+            <input type="week"><br>
+            <input type="datetime"><br>
+        </form>
+    </div>
+</div>
+
+
+
+<div style="width: 100%;background: rgba(0, 0, 0, 0.4);position: fixed;bottom: 0;left: 0;height: 29px;padding-top: 13px;" id="minimisedHolder"></div>
+<!--<div style="overflow-y: scroll; overflow-x: hidden; width: 100%; height: 30%; position: fixed; bottom: 0; left: 0; background-color: lightgray" id="console"></div>-->
+</body>
+<style>
+.field{
+    background-color: lightgray;
+}
+</style>
+</html>
+<script>
+    window.onload = function () {
+//turn all divs with MoveAble and MoveAnle-topbar classes into movable windows
+        for (var i = 0; i < document.getElementsByClassName('MoveAble').length; i++) {
+            var classe = new Moving_windows(document.getElementsByClassName('MoveAble')[i], document.getElementsByClassName('MoveAble-topbar')[i], {
+                closeButton: true,
+//                closeButtonHTML: '<img src="https://cdn3.iconfinder.com/data/icons/buttons/512/Icon_12-512.png" width="30" height="30">',
+                minimizeButton: false
+            });
+        }
+//end turnning all divs with MoveAble and MoveAnle-topbar classes into movable windows
+
+//addstreamer
+    var inputfield = document.getElementById('addStreamer');
+        inputfield.addEventListener('keyup', function (e) {
+            if(e.keyCode == 13){
+                    createWindow("<h2 style='display: inline'>" + this.value + "s stream</h2>", '<iframe src="https://player.twitch.tv/?channel=' + this.value + '" frameborder="0" allowfullscreen="true" scrolling="no" height="500" width="620"></iframe>', this.value);
+
+                this.value = '';
+            }
+        });
+//end addstreamer
+//openSite
+        var openSite = document.getElementById('openSite');
+        openSite.addEventListener('keyup', function (e) {
+            if(e.keyCode == 13){
+                    createWindow("<h4 style='display: inline'>" + this.value + "</h4>", '<iframe src="' + this.value + '" frameborder="0" allowfullscreen="true" scrolling="yes" style="width: 100%; height: 100%"></iframe>', this.value);
+
+                this.value = '';
+            }
+        });
+//end openSite
+
+//creating a moving window using a function
+        function createWindow(title, content, minimized_title){
+            //setting variables and creating divs
+                var minimized_title = minimized_title||title;
+                var moveable = document.createElement('div');
+                var moveAble_topbar = document.createElement('div');
+                var moveAble_content = document.createElement('div');
+            //giving the DOM objects a class (for css)
+                moveable.className = "MoveAble";
+                moveAble_topbar.className = "MoveAble-topBar";
+                moveAble_content.className = "moveAble-content";
+            //placing content and title
+                moveAble_content.innerHTML = content;
+                moveAble_topbar.innerHTML = title;
+            //adding the windows to the page
+                moveable.appendChild(moveAble_topbar);
+                moveable.appendChild(moveAble_content);
+                document.getElementById('holder').appendChild(moveable);
+            //adding the moveable class to the window using DOM element moveable and DOM element moveAble_topbar
+                var moving_window = new Moving_windows(moveable, moveAble_topbar, {
+                    //setting some of the settings
+                    closeButton: true,
+                    minimizeButton: true
+                    //settings so far: closeButton(bool), closeButtonHTML(String with any html), closeButtonClass(string with classname, defaults to moving_windows_close),minimizeButton(bool), minimizeButtonHTML(String with any html), minimizeButtonClass(string with classname, defaults to moving_windows_minimize), blockEdges(bool)
+                });
+            //adding an eventlistener to put minimised windows on a bar
+                moveable.addEventListener('minimize', function () {
+                    //creating an element to open it again later
+                    var OpenButton = document.createElement('div');
+                    //setting the css for the button
+                    OpenButton.style.height = "100%";
+                    OpenButton.style.backgroundColor = "lightgray";
+                    OpenButton.style.display = 'inline';
+                    OpenButton.style.margin = '0px 5px';
+                    OpenButton.style.padding = "10px";
+                    //setting the title
+                    OpenButton.innerHTML = minimized_title;
+                    //function to open
+                    OpenButton.onclick = function () {
+                        //when clicked open the window
+                        moving_window.open();
+                        //hiding the button to open
+                        OpenButton.style.display = 'none';
+                        //removing this assigned function
+                        this.remove();
+                    };
+                    //appending the button to the page
+                   document.getElementById('minimisedHolder').appendChild(OpenButton);
+                });
+        }
+        
+        
+    };
+//    console.log = function (msg) {
+//        document.getElementById('console').innerHTML += "<br>"+msg;
+//        document.getElementById('console').scrollTop = document.getElementById('console').scrollHeight;
+//    };
+</script>
