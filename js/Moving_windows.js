@@ -140,12 +140,13 @@ function move(left, top){
         e = e || event;
         var rect = e.target.getBoundingClientRect();
         e.offsetX = e.targetTouches[0].pageX - rect.left;
-        e.offsetY = e.targetTouches[0].pageY - rect.top;
+        e.offsetY = e.targetTouches[0].pageY - (rect.top-document.body.getBoundingClientRect().top);
         this.touchID = e.targetTouches[0].identifier;
         pushedDown(e);
     };
     functions.touchend = function (e) {
         //setting everything back to normal
+        document.body.classList.remove('disableScroll');
         this.move = false;
         this.touchID = undefined;
         moveAbleWindow.style.zIndex = moveAbleWindow.style.oldzIndex||'auto';
@@ -163,14 +164,16 @@ function move(left, top){
             //running through registered touches on the device until it finds the one wanting to move the window and moving it
             for (var j = 0; j < e.targetTouches.length; j++) {
                 if (MovingBar.touchID == e.targetTouches[j].identifier) {
-                    move(e.targetTouches[e.targetTouches[j].identifier].pageX - MovingBar.startX, moveAbleWindow.style.top = e.targetTouches[e.targetTouches[j].identifier].pageY - MovingBar.startY);
+                    document.body.classList.add('disableScroll');
+                    e.preventDefault();
+                    move(e.targetTouches[e.targetTouches[j].identifier].pageX - MovingBar.startX,e.targetTouches[e.targetTouches[j].identifier].pageY - MovingBar.startY);
                     break;
                 }
             }
         }
 
     };
-    document.addEventListener('touchmove', functions.touchmove);
+    document.addEventListener('touchmove', functions.touchmove,{passive:false});
     //end touchscreen
 
 
