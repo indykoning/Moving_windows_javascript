@@ -1,3 +1,9 @@
+.disableScroll{
+    touch-action: none;
+}
+body{
+    height: 200%;
+}
 .MoveAble{
         /*z-index: 0;*/
         background-color: white;
